@@ -1,0 +1,3 @@
+PAN: Primary administration node
+MNT: Monitoring node
+PSN: Policy service node
