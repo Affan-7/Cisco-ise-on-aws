@@ -15,7 +15,7 @@ resource "aws_internet_gateway" "igw" {
 # Attach the exisiting vgw to the VPC
 resource "aws_vpn_gateway_attachment" "vpn_attachment" {
   vpc_id         = aws_vpc.main.id
-  vpn_gateway_id = "vgw-0ff2b6227f0c822c7"
+  vpn_gateway_id = "vgw-0ff2b6227f0c822c7"  # replace this value with the id of your vgw
 }
 
 # Create a custom route table
@@ -123,6 +123,7 @@ resource "aws_s3_bucket" "ise-repository" {
   bucket        = "ise-repository"
 }
 
+# Make S3 bucket private
 resource "aws_s3_bucket_acl" "ise-repository-s3-acl" {
   bucket = aws_s3_bucket.ise-repository.id
   acl    = "private"
@@ -188,6 +189,7 @@ resource "aws_transfer_user" "sftp-user" {
   home_directory      = join("", ["/", aws_s3_bucket.ise-repository.bucket])
 }
 
+# dynamically get the latest CISCO ISE ami id
 data "aws_ami" "cisco_ise" {
   most_recent      = true
   owners           = ["679593333241"] # AWS marketplace
@@ -198,7 +200,7 @@ data "aws_ami" "cisco_ise" {
 }
 
 variable "pan-zone-a" {
-  default = 1   # Number of PPAN/PMNT in zone-a
+  default = 1   # Number of PPAN/PMNT instances to create in zone-a
 }
 
 # Create PPAN/PMNT in zone-a
@@ -219,7 +221,7 @@ module "ise-zone-a" {
 }
 
 variable "pan-zone-b" {
-  default = 1   # Number of PPAN/PMNT in zone-b
+  default = 1   # Number of PPAN/PMNT instances to create in zone-b
 }
 
 # Create SPAN/SMNT in zone-b
@@ -240,7 +242,7 @@ module "ise-zone-b" {
 }
 
 variable "psn-zone-a" {
-  default = 2   # Number of psn in zone-a
+  default = 2   # Number of psn instances to create in zone-a
 }
 
 # Create 2 PSNs in zone-a
@@ -264,7 +266,7 @@ module "psn-zone-a" {
 }
 
 variable "psn-zone-b" {
-  default = 2   # Number of psn in zone-b
+  default = 2   # Number of psn instances to create in zone-b
 }
 
 # Create 2 PSNs in zone-b

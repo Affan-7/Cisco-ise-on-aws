@@ -32,7 +32,7 @@ resource "aws_instance" "ise" {
 
 resource "aws_route53_record" "forward" {
   zone_id = var.forward_zone
-  name    = var.hostname
+  name    = var.hostname  # example ise1.example.com
   type    = "A"
   ttl     = "300"
   records = [aws_network_interface.nic.private_ip]
@@ -43,5 +43,5 @@ resource "aws_route53_record" "reverse" {
   name    = join(".", [element(split(".",aws_network_interface.nic.private_ip),3), element(split(".",aws_network_interface.nic.private_ip),2)])
   type    = "PTR"
   ttl     = "300"
-  records = [join(".",["${var.hostname}","${var.domain_name}"])]
+  records = [join(".",["${var.hostname}","${var.domain_name}"])] # example ise1.example.com
 }
